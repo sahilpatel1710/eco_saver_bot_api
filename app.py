@@ -14,7 +14,6 @@ emission_factors = {
 @app.route('/')
 def home():
     return jsonify({"student_number": 200582781})
-
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(force=True)
@@ -25,17 +24,18 @@ def webhook():
         transport = parameters.get('transport_type', '').lower()
         distance = parameters.get('distance', 0)
 
-        factor = emission_factors.get(transport, 0.2)  # fallback factor
+        factor = emission_factors.get(transport, 0.2)
         footprint = round(factor * distance, 2)
 
         response_text = (
             f"Your estimated carbon footprint for traveling {distance} km by {transport} "
             f"is {footprint} kg of CO2."
         )
+
+    elif intent == 'GetStudentNumber':
+        response_text = "My student number is 200582781."
+
     else:
         response_text = "I'm not sure how to help with that."
 
     return jsonify({"fulfillmentText": response_text})
-
-if __name__ == '__main__':
-    app.run(debug=True)
